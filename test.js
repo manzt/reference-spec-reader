@@ -30,4 +30,5 @@ const data = `
 `;
 
 const spec = JSON.parse(data);
-console.log(parse(spec, nunjucks.renderString));
+const expanded = parse(spec, nunjucks.renderString);
+console.log(expanded);

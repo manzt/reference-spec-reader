@@ -34,7 +34,7 @@ Experimental parser for [`ReferenceFileSystem` description](https://github.com/i
 
 #### Demo
 
-The demo requires `nunjucks.renderString`.
+The [demo](./test.js) requires `nunjucks.renderString`.
 
 ```bash
 npm install
