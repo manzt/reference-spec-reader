@@ -34,7 +34,11 @@ Experimental parser for [`ReferenceFileSystem` description](https://github.com/i
 
 #### Demo
 
-The [demo](./test.js) requires `nunjucks.renderString`.
+The [demo](./test.js) requires `nunjucks.renderString` to render jinja templates.
+
+> NOTE: Use with caution. [From the docs](https://mozilla.github.io/nunjucks/api.html), 
+"`nunjucks` does not sandbox execution so **it is not safe to run user-defined 
+templates or inject user-defined content into template definitions**". 
 
 ```bash
 npm install
