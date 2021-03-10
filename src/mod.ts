@@ -11,17 +11,16 @@ export interface ReferenceFileSystem {
       [key: string]: Range | number[];
     };
   }[];
-  refs: {
-    [key: string]: string | [url: string, offset: number, length: number];
-  };
+  refs: Refs;
+}
+interface Refs {
+  [key: string]: string | [url: string] | [url: string, offset: number, length: number];
 }
 
 type RenderContext = { [key: string]: number | string | ((ctx: { [key: string]: string }) => string) };
 type RenderFn = (template: string, ctx: RenderContext) => string;
 
-export function parse(spec: ReferenceFileSystem, renderString: RenderFn): {
-  [key: string]: string | [url: string, offset: number, length: number];
-} {
+export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
   const context: RenderContext = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
@@ -37,7 +36,7 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): {
     return renderString(t, { ...context, ...o });
   };
 
-  const gen = {};
+  const gen: Refs = {};
   for (const g of spec.gen) {
     for (const dims of iterDims(g.dimensions)) {
       const key = render(g.key, dims);
@@ -48,13 +47,13 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): {
     }
   }
 
-  const refs = {};
+  const refs: Refs = {};
   for (const [key, ref] of Object.entries(spec.refs)) {
     if (typeof ref === "string") {
       refs[key] = ref;
     } else {
-      const [url, offset, length] = ref;
-      refs[key] = [render(url), offset, length];
+      const url = render(ref[0]);
+      refs[key] = ref.length === 1 ? [url] : [url, ref[1], ref[2]];
     }
   }
 
