@@ -1,0 +1,20 @@
+{
+  "name": "reference-spec-reader",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.9.0"
+  },
+  "scripts": {
+    "build": "esbuild src/mod.ts --outfile=index.js",
+    "test": "npm run build && node test"
+  },
+  "keywords": [],
+  "author": "manzt <trevor.j.manz@gmail.com>",
+  "license": "MIT"
+}

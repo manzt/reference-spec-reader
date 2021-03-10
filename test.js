@@ -1,4 +1,6 @@
-export const data = `
+import { parse } from "./index.js";
+
+const data = `
 {
   "version": 1,
   "templates": {
@@ -25,3 +27,6 @@ export const data = `
   }
 }
 `;
+
+const spec = JSON.parse(data);
+console.log(parse(spec));

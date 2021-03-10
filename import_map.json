@@ -1,5 +1,0 @@
-{
-    "imports": {
-        "nunjucks": "https://cdn.skypack.dev/nunjucks"
-    }
-}

@@ -1,11 +1,9 @@
 /// <reference lib="esnext" />
 import nunjucks from "nunjucks";
 
-export interface ReferenceSpec {
+export interface ReferenceFileSystem {
   version: 1;
-  templates: {
-    [key: string]: string;
-  };
+  templates: { [key: string]: string; };
   gen: {
     key: string;
     url: string;
@@ -20,39 +18,47 @@ export interface ReferenceSpec {
   };
 }
 
-interface ExpandedReference {
-  [key: string]: Uint8Array | [url: string, offset: number, length: number];
-}
+export function parse(spec: ReferenceFileSystem): {
+  [key: string]: string | [url: string, offset: number, length: number];
+} {
+  const env = new nunjucks.Environment();
 
-interface Range {
-  start?: number;
-  stop: number;
-  step?: number;
-}
+  const templates: {
+    [key: string]: string | ((ctx: { [key: string]: any }) => string)
+  } = {};
+  for (const [key, template] of Object.entries(spec.templates)) {
+    // TODO: better check for whether a template or not
+    if (template.includes("{{")) {
+      // Need to register filter in environment
+      templates[key] = (ctx: { [key: string]: number | string }) => {
+        const text = env.renderString(template, ctx);
+        console.log(text);
+        return text;
+      };
+    } else {
+      templates[key] = template;
+    }
+  }
 
-export function parse(spec: ReferenceSpec) {
   const render = (t: string, o?: { [key: string]: number }) => {
-    return nunjucks.render(t, { ...spec.templates, ...o });
+    return env.renderString(t, { ...templates, ...o });
   };
 
-  const gen: ExpandedReference = {};
+  const gen = {};
   for (const g of spec.gen) {
     for (const dims of iterDims(g.dimensions)) {
-      console.log(dims);
       const key = render(g.key, dims);
       const url = render(g.url, dims);
       const offset = render(g.offset, dims);
       const length = render(g.length, dims);
-      gen[key] = [url, eval(offset), eval(length)];
+      gen[key] = [url, parseInt(offset), parseInt(length)];
     }
   }
 
-  const encoder = new TextEncoder();
-
-  const refs: ExpandedReference = {};
+  const refs = {};
   for (const [key, ref] of Object.entries(spec.refs)) {
     if (typeof ref === "string") {
-      refs[key] = encoder.encode(ref);
+      refs[key] = ref;
     } else {
       const [url, offset, length] = ref;
       refs[key] = [render(url), offset, length];
@@ -103,6 +109,12 @@ function* product<T extends Array<Iterable<any>>>(
     }
     results[i] = iterators[i].next();
   }
+}
+
+interface Range {
+  start?: number;
+  stop: number;
+  step?: number;
 }
 
 // python-like range generator
