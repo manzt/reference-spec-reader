@@ -1,6 +1,4 @@
 /// <reference lib="esnext" />
-import nunjucks from "nunjucks";
-
 export interface ReferenceFileSystem {
   version: 1;
   templates: { [key: string]: string; };
@@ -18,30 +16,25 @@ export interface ReferenceFileSystem {
   };
 }
 
-export function parse(spec: ReferenceFileSystem): {
+type RenderContext = { [key: string]: number | string | ((ctx: { [key: string]: string }) => string) };
+type RenderFn = (template: string, ctx: RenderContext) => string;
+
+export function parse(spec: ReferenceFileSystem, renderString: RenderFn): {
   [key: string]: string | [url: string, offset: number, length: number];
 } {
-  const env = new nunjucks.Environment();
-
-  const templates: {
-    [key: string]: string | ((ctx: { [key: string]: any }) => string)
-  } = {};
+  const context: RenderContext = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
     if (template.includes("{{")) {
       // Need to register filter in environment
-      templates[key] = (ctx: { [key: string]: number | string }) => {
-        const text = env.renderString(template, ctx);
-        console.log(text);
-        return text;
-      };
+      context[key] = (ctx: { [key: string]: number | string }) => renderString(template, ctx);
     } else {
-      templates[key] = template;
+      context[key] = template;
     }
   }
 
   const render = (t: string, o?: { [key: string]: number }) => {
-    return env.renderString(t, { ...templates, ...o });
+    return renderString(t, { ...context, ...o });
   };
 
   const gen = {};

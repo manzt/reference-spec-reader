@@ -1,3 +1,4 @@
+import nunjucks from "nunjucks";
 import { parse } from "./index.js";
 
 const data = `
@@ -29,4 +30,4 @@ const data = `
 `;
 
 const spec = JSON.parse(data);
-console.log(parse(spec));
+console.log(parse(spec, nunjucks.renderString));

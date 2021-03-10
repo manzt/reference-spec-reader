@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "dependencies": {
-    "nunjucks": "^3.2.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "esbuild": "^0.9.0"
+    "esbuild": "^0.9.0",
+    "nunjucks": "^3.2.3"
   },
   "scripts": {
     "build": "esbuild src/mod.ts --outfile=index.js",
