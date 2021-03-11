@@ -36,18 +36,8 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
     return renderString(t, { ...context, ...o });
   };
 
-  const gen: Refs = {};
-  for (const g of spec.gen) {
-    for (const dims of iterDims(g.dimensions)) {
-      const key = render(g.key, dims);
-      const url = render(g.url, dims);
-      const offset = render(g.offset, dims);
-      const length = render(g.length, dims);
-      gen[key] = [url, parseInt(offset), parseInt(length)];
-    }
-  }
-
   const refs: Refs = {};
+
   for (const [key, ref] of Object.entries(spec.refs)) {
     if (typeof ref === "string") {
       refs[key] = ref;
@@ -57,7 +47,17 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
     }
   }
 
-  return { ...refs, ...gen };
+  for (const g of spec.gen) {
+    for (const dims of iterDims(g.dimensions)) {
+      const key = render(g.key, dims);
+      const url = render(g.url, dims);
+      const offset = render(g.offset, dims);
+      const length = render(g.length, dims);
+      refs[key] = [url, parseInt(offset), parseInt(length)];
+    }
+  }
+
+  return refs;
 }
 
 function* iterDims(dimensions: { [key: string]: Range | number[] }) {
