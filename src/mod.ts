@@ -1,7 +1,7 @@
 /// <reference lib="esnext" />
 export interface ReferenceFileSystem {
   version: 1;
-  templates: { [key: string]: string; };
+  templates: { [key: string]: string };
   gen: {
     key: string;
     url: string;
@@ -12,7 +12,7 @@ export interface ReferenceFileSystem {
     };
   }[];
   refs: {
-    [key: string]: Ref
+    [key: string]: Ref;
   };
 }
 
@@ -21,7 +21,6 @@ type RenderContext = { [key: string]: number | string | ((ctx: { [key: string]: 
 type RenderFn = (template: string, ctx: RenderContext) => string;
 
 export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Map<string, Ref> {
-
   const context: RenderContext = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
@@ -63,9 +62,7 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Map<st
 
 function* iterDims(dimensions: { [key: string]: Range | number[] }) {
   const keys = Object.keys(dimensions);
-  const iterables = Object.values(dimensions).map((i) =>
-    Array.isArray(i) ? i : range(i)
-  );
+  const iterables = Object.values(dimensions).map((i) => (Array.isArray(i) ? i : range(i)));
   for (const values of product(...iterables)) {
     yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));
   }
@@ -75,9 +72,7 @@ function* iterDims(dimensions: { [key: string]: Range | number[] }) {
 // https://gist.github.com/cybercase/db7dde901d7070c98c48
 function* product<T extends Array<Iterable<any>>>(
   ...iterables: T
-): IterableIterator<
-  { [K in keyof T]: T[K] extends Iterable<infer U> ? U : never }
-> {
+): IterableIterator<{ [K in keyof T]: T[K] extends Iterable<infer U> ? U : never }> {
   if (iterables.length === 0) {
     return;
   }
@@ -87,7 +82,7 @@ function* product<T extends Array<Iterable<any>>>(
   if (results.some((r) => r.done)) {
     throw new Error("Input contains an empty iterator.");
   }
-  for (let i = 0; ;) {
+  for (let i = 0; ; ) {
     if (results[i].done) {
       // reset the current iterator
       iterators[i] = iterables[i][Symbol.iterator]();
