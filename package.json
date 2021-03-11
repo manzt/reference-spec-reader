@@ -7,11 +7,18 @@
   "dependencies": {},
   "devDependencies": {
     "esbuild": "^0.9.0",
-    "nunjucks": "^3.2.3"
+    "nunjucks": "^3.2.3",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "build": "esbuild src/mod.ts --outfile=index.js",
-    "test": "npm run build && node test"
+    "test": "npm run build && node test",
+    "format": "prettier --write src/"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": true,
+    "trailingComma": "all"
   },
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",

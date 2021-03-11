@@ -1,7 +1,7 @@
 /// <reference lib="esnext" />
 export interface ReferenceFileSystem {
   version: 1;
-  templates: { [key: string]: string; };
+  templates: { [key: string]: string };
   gen: {
     key: string;
     url: string;
@@ -11,16 +11,16 @@ export interface ReferenceFileSystem {
       [key: string]: Range | number[];
     };
   }[];
-  refs: Refs;
-}
-interface Refs {
-  [key: string]: string | [url: string] | [url: string, offset: number, length: number];
+  refs: {
+    [key: string]: Ref;
+  };
 }
 
+type Ref = string | [url: string] | [url: string, offset: number, length: number];
 type RenderContext = { [key: string]: number | string | ((ctx: { [key: string]: string }) => string) };
 type RenderFn = (template: string, ctx: RenderContext) => string;
 
-export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
+export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Map<string, Ref> {
   const context: RenderContext = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
@@ -36,14 +36,14 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
     return renderString(t, { ...context, ...o });
   };
 
-  const refs: Refs = {};
+  const refs: Map<string, Ref> = new Map();
 
   for (const [key, ref] of Object.entries(spec.refs)) {
     if (typeof ref === "string") {
-      refs[key] = ref;
+      refs.set(key, ref);
     } else {
       const url = render(ref[0]);
-      refs[key] = ref.length === 1 ? [url] : [url, ref[1], ref[2]];
+      refs.set(key, ref.length === 1 ? [url] : [url, ref[1], ref[2]]);
     }
   }
 
@@ -53,7 +53,7 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
       const url = render(g.url, dims);
       const offset = render(g.offset, dims);
       const length = render(g.length, dims);
-      refs[key] = [url, parseInt(offset), parseInt(length)];
+      refs.set(key, [url, parseInt(offset), parseInt(length)]);
     }
   }
 
@@ -62,9 +62,7 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Refs {
 
 function* iterDims(dimensions: { [key: string]: Range | number[] }) {
   const keys = Object.keys(dimensions);
-  const iterables = Object.values(dimensions).map((i) =>
-    Array.isArray(i) ? i : range(i)
-  );
+  const iterables = Object.values(dimensions).map((i) => (Array.isArray(i) ? i : range(i)));
   for (const values of product(...iterables)) {
     yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));
   }
@@ -74,9 +72,7 @@ function* iterDims(dimensions: { [key: string]: Range | number[] }) {
 // https://gist.github.com/cybercase/db7dde901d7070c98c48
 function* product<T extends Array<Iterable<any>>>(
   ...iterables: T
-): IterableIterator<
-  { [K in keyof T]: T[K] extends Iterable<infer U> ? U : never }
-> {
+): IterableIterator<{ [K in keyof T]: T[K] extends Iterable<infer U> ? U : never }> {
   if (iterables.length === 0) {
     return;
   }
@@ -86,7 +82,7 @@ function* product<T extends Array<Iterable<any>>>(
   if (results.some((r) => r.done)) {
     throw new Error("Input contains an empty iterator.");
   }
-  for (let i = 0; ;) {
+  for (let i = 0; ; ) {
     if (results[i].done) {
       // reset the current iterator
       iterators[i] = iterables[i][Symbol.iterator]();
