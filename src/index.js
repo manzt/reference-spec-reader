@@ -1,42 +1,38 @@
+// @ts-check
 /// <reference lib="esnext" />
-export interface ReferenceFileSystem {
-  version: 1;
-  templates: { [key: string]: string };
-  gen: {
-    key: string;
-    url: string;
-    offset: string;
-    length: string;
-    dimensions: {
-      [key: string]: Range | number[];
-    };
-  }[];
-  refs: {
-    [key: string]: Ref;
-  };
-}
 
-type Ref = string | [url: string] | [url: string, offset: number, length: number];
-type RenderContext = { [key: string]: number | string | ((ctx: { [key: string]: string }) => string) };
-type RenderFn = (template: string, ctx: RenderContext) => string;
-
-export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Map<string, Ref> {
-  const context: RenderContext = {};
+/**
+ *
+ * @param {import('./types').ReferenceFileSystem} spec
+ * @param {import('./types').RenderFn} renderString
+ * @returns {Map<string, import('./types').Ref>}
+ */
+export function parse(spec, renderString) {
+  /**
+   * @type {import('./types').RenderContext}
+   */
+  const context = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
     if (template.includes("{{")) {
       // Need to register filter in environment
-      context[key] = (ctx: { [key: string]: number | string }) => renderString(template, ctx);
+      context[key] = (ctx) => renderString(template, ctx);
     } else {
       context[key] = template;
     }
   }
 
-  const render = (t: string, o?: { [key: string]: number }) => {
+  /**
+   * @type {(t: string, o?: Record<string, string | number>) => string} t
+   */
+  const render = (t, o) => {
     return renderString(t, { ...context, ...o });
   };
 
-  const refs: Map<string, Ref> = new Map();
+  /**
+   * @type {Map<string, import('./types').Ref>}
+   */
+  const refs = new Map();
 
   for (const [key, ref] of Object.entries(spec.refs)) {
     if (typeof ref === "string") {
@@ -60,7 +56,11 @@ export function parse(spec: ReferenceFileSystem, renderString: RenderFn): Map<st
   return refs;
 }
 
-function* iterDims(dimensions: { [key: string]: Range | number[] }) {
+/**
+ * @param {Record<string, import('./types').Range | number[]>} dimensions
+ * @returns {Generator<Record<string, number>>}
+ */
+function* iterDims(dimensions) {
   const keys = Object.keys(dimensions);
   const iterables = Object.values(dimensions).map((i) => (Array.isArray(i) ? i : range(i)));
   for (const values of product(...iterables)) {
@@ -68,11 +68,7 @@ function* iterDims(dimensions: { [key: string]: Range | number[] }) {
   }
 }
 
-// python-like itertools.product generator
-// https://gist.github.com/cybercase/db7dde901d7070c98c48
-function* product<T extends Array<Iterable<any>>>(
-  ...iterables: T
-): IterableIterator<{ [K in keyof T]: T[K] extends Iterable<infer U> ? U : never }> {
+function* product(...iterables) {
   if (iterables.length === 0) {
     return;
   }
@@ -92,21 +88,14 @@ function* product<T extends Array<Iterable<any>>>(
         return;
       }
     } else {
-      yield results.map(({ value }) => value) as any;
+      yield results.map(({ value }) => value);
       i = 0;
     }
     results[i] = iterators[i].next();
   }
 }
 
-interface Range {
-  start?: number;
-  stop: number;
-  step?: number;
-}
-
-// python-like range generator
-function* range({ stop, start = 0, step = 1 }: Range) {
+function* range({ stop, start = 0, step = 1 }) {
   for (let i = start; i < stop; i += step) {
     yield i;
   }
