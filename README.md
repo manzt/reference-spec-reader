@@ -42,7 +42,7 @@ templates or inject user-defined content into template definitions**".
 
 ```bash
 npm install
-npm test
+node test
 # Map(9) {
 #  'key0' => 'data',
 #  'key1' => [ 'http://target_url', 10000, 100 ],
