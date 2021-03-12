@@ -8,7 +8,9 @@
     "nunjucks": "^3.2.3"
   },
   "devDependencies": {},
-  "scripts": {},
+  "scripts": {
+    "test": "node test/test.js"
+  },
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",
   "license": "MIT"
