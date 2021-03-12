@@ -4,20 +4,11 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "dependencies": {},
-  "devDependencies": {
-    "nunjucks": "^3.2.3",
-    "prettier": "^2.2.1"
+  "dependencies": {
+    "nunjucks": "^3.2.3"
   },
-  "scripts": {
-    "test": "node test",
-    "format": "prettier --write src/"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "semi": true,
-    "trailingComma": "all"
-  },
+  "devDependencies": {},
+  "scripts": {},
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",
   "license": "MIT"
