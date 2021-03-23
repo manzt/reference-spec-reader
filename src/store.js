@@ -1,6 +1,8 @@
 // @ts-check
 /// <reference lib="esnext" />
 
+import { parse } from './index.js';
+
 class KeyError extends Error {
   __zarr__ = "KeyError";
   constructor(msg) {
@@ -20,8 +22,9 @@ export class FileReferenceStore {
 
   /**
    * @param {string} url
+   * @param {import('./types').RenderFn=} renderString
    */
-  static async fromUrl(url) {
+  static async fromUrl(url, renderString) {
     /**
      * @type {Record<string, import('./types').Ref> | import('./types').ReferenceFileSystem}
      */
@@ -32,9 +35,8 @@ export class FileReferenceStore {
      */
     let ref;
     if ("version" in json) {
-      const { parse } = await import(new URL('./index.js', import.meta.url).href);
-      const { default: nunjucks } = await import('nunjucks');
-      ref = parse(json, nunjucks.renderString);
+      // @ts-ignore
+      ref = parse(json, renderString);
     } else {
       ref = new Map(Object.entries(json));
     }
@@ -99,8 +101,8 @@ export class FileReferenceStore {
     return this.ref.has(key);
   }
 
-  keys() {
-    return Promise.resolve([...this.ref.keys()]);
+  async keys() {
+    return [...this.ref.keys()];
   }
 
   /**
