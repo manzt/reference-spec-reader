@@ -80,9 +80,9 @@ export function renderString(template, context) {
     const fnMatch = matchFn(inner);
     if (fnMatch) {
       const { fname, ctx } = fnMatch;
-      if (fname in context && typeof context[fname] === 'function') {
-        // @ts-ignore
-        return context[fname](ctx);
+      const fn = context[fname];
+      if (typeof fn === 'function') {
+        return fn(ctx);
       }
       throw Error(`Cannot find function named ${fname} in rendering context.`);
     }
@@ -90,6 +90,10 @@ export function renderString(template, context) {
     const matches = matchMathEval(inner);
 
     if (matches) {
+      // TODO: Replaces substrings too eagerly.
+      // template: "(i + 1) * fib + 200"
+      // context: { i: 12, fib: 2 }
+      // "(12 + 1) * f12b + 200"
       matches.forEach(match => {
         const value = context[match];
         if (value == null) {
