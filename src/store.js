@@ -123,30 +123,26 @@ export class FileReferenceStore {
   }
 }
 
-// This is for the "binary" loader (custom code is ~2x faster than "atob")
-// from: https://github.com/evanw/esbuild/blob/150a01844d47127c007c2b1973158d69c560ca21/internal/runtime/runtime.go#L185
-
 /**
+ * This is for the "binary" loader (custom code is ~2x faster than "atob") from esbuild.
+ * https://github.com/evanw/esbuild/blob/150a01844d47127c007c2b1973158d69c560ca21/internal/runtime/runtime.go#L185
  * @type {(str: string) => Uint8Array}
  */
 const __toBinary = (() => {
-  const table = new Uint8Array(128);
-  for (let i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i;
-  return (base64) => {
-    const n = base64.length;
+  var table = new Uint8Array(128)
+  for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i
+  return base64 => {
     // @ts-ignore
-    const bytes = new Uint8Array((((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3) / 4) | 0);
-    for (let i = 0, j = 0; i < n;) {
-      const c0 = table[base64.charCodeAt(i++)],
-        c1 = table[base64.charCodeAt(i++)];
-      var c2 = table[base64.charCodeAt(i++)],
-        c3 = table[base64.charCodeAt(i++)];
-      bytes[j++] = (c0 << 2) | (c1 >> 4);
-      bytes[j++] = (c1 << 4) | (c2 >> 2);
-      bytes[j++] = (c2 << 6) | c3;
+    var n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0)
+    for (var i = 0, j = 0; i < n;) {
+      var c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)]
+      var c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)]
+      bytes[j++] = (c0 << 2) | (c1 >> 4)
+      bytes[j++] = (c1 << 4) | (c2 >> 2)
+      bytes[j++] = (c2 << 6) | c3
     }
-    return bytes;
-  };
-})();
+    return bytes
+  }
+})()
 
 const __encoder = new TextEncoder();
