@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference lib="esnext" />
 
-import { renderString as _renderString } from './render.js';
+import { render } from './render.js';
 
 /**
  *
@@ -9,7 +9,7 @@ import { renderString as _renderString } from './render.js';
  * @param {import('./types').RenderFn} renderString
  * @returns {Map<string, import('./types').Ref>}
  */
-export function parse(spec, renderString = _renderString) {
+export function parse(spec, renderString = render) {
   /**
    * @type {import('./types').RenderContext}
    */

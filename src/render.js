@@ -65,7 +65,7 @@ function matchMathEval(str) {
 /**
  * @type {import('./types').RenderFn} 
  */
-export function renderString(template, context) {
+export function render(template, context) {
   const grps = parse(template);
   return grps.map(grp => {
     if (!grp.match) {
