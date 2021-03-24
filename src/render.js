@@ -1,10 +1,11 @@
 // @ts-check
+/// <reference lib="esnext" />
 
 /**
  * @param {string} template 
  */
-function parse(template) {
-  let result = /{{(.*?)}}/g.exec(template);
+function parse(template, re = /{{(.*?)}}/) {
+  let result = re.exec(template);
   const parts = [];
   let pos;
 
@@ -16,7 +17,7 @@ function parse(template) {
     }
     parts.push({ match: true, str: result[0] });
     template = template.slice(result[0].length);
-    result = /{{(.*?)}}/g.exec(template);
+    result = re.exec(template);
   }
 
   if (template) {
@@ -58,8 +59,7 @@ function matchMathEval(str) {
   for (let i = 0; i < str.length; i++) {
     if (!valid.has(str.charAt(i))) return;
   }
-  const matches = str.match(/[A-Za-z_][A-Za-z0-9_]*/ig);
-  return matches;
+  return parse(str, /[A-Za-z_][A-Za-z0-9_]*/ig);
 }
 
 /**
@@ -88,21 +88,16 @@ export function renderString(template, context) {
     }
 
     const matches = matchMathEval(inner);
-
     if (matches) {
-      // TODO: Replaces substrings too eagerly.
-      // template: "(i + 1) * fib + 200"
-      // context: { i: 12, fib: 2 }
-      // "(12 + 1) * f12b + 200"
-      matches.forEach(match => {
-        const value = context[match];
+      const exprParts = matches.map(match => {
+        if (!match.match) return match.str;
+        const value = context[match.str];
         if (value == null) {
           throw Error(`No matching value for ${match}`);
         }
-        inner = inner.replace(match, String(value));
+        return value;
       });
-
-      return eval(inner);
+      return eval(exprParts.join(''));
     }
 
     throw new Error(`Unable to match ${grp.str}`);
