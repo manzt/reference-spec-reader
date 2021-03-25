@@ -1,8 +1,10 @@
 ## reference-spec-reader
 
 Experimental parser for [`ReferenceFileSystem` description](https://github.com/intake/fsspec-reference-maker).
+This repository also provides a `ReferenceStore` implementation, intended as a storage backend for
+[`Zarr.js`](https://github.com/gzuidhof/zarr.js).
 
-#### Example spec (JSON)
+#### Example V1 spec (JSON)
 
 ```json
 {
@@ -36,7 +38,7 @@ Experimental parser for [`ReferenceFileSystem` description](https://github.com/i
 #### Usage
 
 ```javascript
-import { parse } from './src/index.js';
+import { parse } from './src/parse.js';
 
 fetch('ref.json')
   .then(res => res.json())
@@ -56,3 +58,11 @@ fetch('ref.json')
 //  'gen_key4' => [ 'http://server.domain/path_4', 5000, 1000 ]
 // }
 ```
+
+
+#### API
+
+<a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
+
+
+<a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>ref</i>) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)

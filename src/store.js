@@ -11,7 +11,7 @@ class KeyError extends Error {
   }
 }
 
-export class FileReferenceStore {
+export class ReferenceStore {
 
   /**
    * @param {Map<string, import('./types').Ref>} ref 
@@ -25,22 +25,9 @@ export class FileReferenceStore {
    * @param {import('./types').RenderFn=} renderString
    */
   static async fromUrl(url, renderString) {
-    /**
-     * @type {Record<string, import('./types').Ref> | import('./types').ReferencesV1}
-     */
-    const json = await fetch(url).then((res) => res.json());
-
-    /**
-     * @type {Map<string, import('./types').Ref>}
-     */
-    let ref;
-    if ("version" in json) {
-      // @ts-ignore
-      ref = parse(json, renderString);
-    } else {
-      ref = new Map(Object.entries(json));
-    }
-    return new FileReferenceStore(ref);
+    const spec = await fetch(url).then((res) => res.json());
+    const ref = parse(spec, renderString);
+    return new ReferenceStore(ref);
   }
 
   /**
