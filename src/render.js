@@ -2,7 +2,7 @@
 /// <reference lib="esnext" />
 
 /**
- * @param {string} template 
+ * @param {string} template
  */
 function parse(template, re = /{{(.*?)}}/) {
   let result = re.exec(template);
@@ -100,7 +100,7 @@ export function render(template, context) {
         }
         return value;
       });
-      return eval(exprParts.join(''));
+      return Function('"use strict";return (' + exprParts.join('') + ')')();
     }
 
     throw new Error(`Unable to match ${grp.str}`);

@@ -7,6 +7,7 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 ## Example V1 spec (JSON)
 
 ```json
+// ref.json
 {
   "version": 1,
   "templates": {
@@ -35,16 +36,18 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 }
 ```
 
-## Usage
+## API Reference
+
+### `parse`
+
+<a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
+
+Parses both `v0` and `v1` references into `Map<string, string | [url: string] | [url: string, offset: number, length: number]>`.
 
 ```javascript
-import { parse } from './src/parse.js';
-
-fetch('ref.json')
-  .then(res => res.json())
-  .then(spec => parse(spec))
-  .then(console.log);
-
+const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
+const ref = parse(spec);
+console.log(ref);
 // Map(9) {
 //  'key0' => 'data',
 //  'key1' => [ 'http://target_url', 10000, 100 ],
@@ -57,20 +60,6 @@ fetch('ref.json')
 //  'gen_key3' => [ 'http://server.domain/path_3', 4000, 1000 ],
 //  'gen_key4' => [ 'http://server.domain/path_4', 5000, 1000 ]
 // }
-```
-
-
-## API Reference
-
-### `parse`
-
-Parses both `v0` and `v1` references into `Map<string, string | [url: string] | [url: string, offset: number, length: number]>`.
-
-<a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
-
-```javascript
-const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
-const ref = parse(spec);
 ```
 
 This library includes a minimal built-in `render` method to render jinja-templates included in the `v1` spec. 
@@ -88,6 +77,8 @@ A `Zarr.js` store implementation using the parsed references.
 
 <a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>ref</i>) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
+Initialize a store from parsed references.
+
 ```javascript
 const ref = parse(spec);
 const store = new ReferenceStore(ref);
@@ -95,7 +86,7 @@ const store = new ReferenceStore(ref);
 
 <a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>renderString<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
-A convenience method to init the store.
+A convenience method to initialize the store.
 
 ```javascript
 const store = await ReferenceStore.fromUrl("http://localhost:8080/ref.json");
