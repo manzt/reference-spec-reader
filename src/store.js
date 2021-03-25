@@ -26,7 +26,7 @@ export class FileReferenceStore {
    */
   static async fromUrl(url, renderString) {
     /**
-     * @type {Record<string, import('./types').Ref> | import('./types').ReferenceFileSystem}
+     * @type {Record<string, import('./types').Ref> | import('./types').ReferencesV1}
      */
     const json = await fetch(url).then((res) => res.json());
 

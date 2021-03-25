@@ -4,8 +4,7 @@
 import { render } from './render.js';
 
 /**
- *
- * @param {import('./types').ReferenceFileSystem} spec
+ * @param {import('./types').ReferencesV1} spec
  * @param {import('./types').RenderFn} renderString
  * @returns {Map<string, import('./types').Ref>}
  */

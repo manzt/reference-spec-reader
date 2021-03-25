@@ -1,4 +1,4 @@
-export interface ReferenceFileSystem {
+export interface ReferencesV1 {
   version: 1;
   templates: Record<string, string>;
   gen: {
