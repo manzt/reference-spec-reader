@@ -93,7 +93,10 @@ export function render(template, context) {
         if (!match.match) return match.str;
         const value = context[match.str];
         if (value == null) {
-          throw Error(`No matching value for ${match}`);
+          throw Error(`Cannot find number named ${match.str} in rendering context.`);
+        }
+        if (typeof value !== 'number') {
+          throw Error(`The provided value for ${match.str} must be a number.`);
         }
         return value;
       });

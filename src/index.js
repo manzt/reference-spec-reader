@@ -1,2 +1,2 @@
 export { parse } from './parse.js';
-export { ReferenceFileSystem } from './store.js';
+export { FileReferenceStore } from './store.js';
