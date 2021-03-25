@@ -66,7 +66,7 @@ This library includes a minimal built-in `render` method to render jinja-templat
 This method can be overriden by providing a custom `renderString` function as a second argument.
 
 ```javascript
-import nunjucks from "nunjucks";
+import nunjucks from 'nunjucks';
 const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
 const ref = parse(spec, nunjucks.renderString);
 ```
@@ -89,5 +89,5 @@ const store = new ReferenceStore(ref);
 A convenience method to initialize the store.
 
 ```javascript
-const store = await ReferenceStore.fromUrl("http://localhost:8080/ref.json");
+const store = await ReferenceStore.fromUrl('http://localhost:8080/ref.json');
 ```
