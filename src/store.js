@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference lib="esnext" />
 
-import { parse } from './index.js';
+import { parse } from './parse.js';
 
 class KeyError extends Error {
   __zarr__ = "KeyError";
