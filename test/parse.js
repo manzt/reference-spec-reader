@@ -4,7 +4,7 @@ import * as assert from 'uvu/assert';
 import nunjucks from "nunjucks";
 import { parse } from "../src/parse.js";
 
-const text = `{
+const v1 = `{
   "version": 1,
   "templates": {
       "u": "server.domain/path",
@@ -45,12 +45,12 @@ const expected = new Map(Object.entries({
 }));
 
 test('Parse references builtin', async () => {
-  const spec = JSON.parse(text);
+  const spec = JSON.parse(v1);
   assert.equal(parse(spec), expected);
 })
 
 test('Parse references nunjucks', async () => {
-  const spec = JSON.parse(text);
+  const spec = JSON.parse(v1);
   assert.equal(parse(spec, nunjucks.renderString), expected);
 });
 
