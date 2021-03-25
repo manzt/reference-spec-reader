@@ -2,14 +2,18 @@
   "name": "reference-spec-reader",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
-  "dependencies": {
-    "nunjucks": "^3.2.3"
+  "exports": {
+    ".": "./src/index.js"
   },
-  "devDependencies": {},
+  "dependencies": {},
+  "devDependencies": {
+    "nunjucks": "^3.2.3",
+    "uvu": "^0.5.1"
+  },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "uvu test"
   },
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",
