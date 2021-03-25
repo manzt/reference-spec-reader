@@ -4,7 +4,7 @@ Experimental parser for [`ReferenceFileSystem` description](https://github.com/i
 This repository also provides a `ReferenceStore` implementation, intended as a storage backend for
 [`Zarr.js`](https://github.com/gzuidhof/zarr.js).
 
-#### Example V1 spec (JSON)
+## Example V1 spec (JSON)
 
 ```json
 {
@@ -35,7 +35,7 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 }
 ```
 
-#### Usage
+## Usage
 
 ```javascript
 import { parse } from './src/parse.js';
@@ -60,9 +60,43 @@ fetch('ref.json')
 ```
 
 
-#### API
+## API Reference
+
+### `parse`
+
+Parses both `v0` and `v1` references into `Map<string, string | [url: string] | [url: string, offset: number, length: number]>`.
 
 <a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
 
+```javascript
+const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
+const ref = parse(spec);
+```
+
+This library includes a minimal built-in `render` method to render jinja-templates included in the `v1` spec. 
+This method can be overriden by providing a custom `renderString` function as a second argument.
+
+```javascript
+import nunjucks from "nunjucks";
+const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
+const ref = parse(spec, nunjucks.renderString);
+```
+
+### `ReferenceStore`
+
+A `Zarr.js` store implementation using the parsed references.
 
 <a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>ref</i>) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+
+```javascript
+const ref = parse(spec);
+const store = new ReferenceStore(ref);
+```
+
+<a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>renderString<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+
+A convenience method to init the store.
+
+```javascript
+const store = await ReferenceStore.fromUrl("http://localhost:8080/ref.json");
+```
