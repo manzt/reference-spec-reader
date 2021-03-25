@@ -32,26 +32,25 @@ Experimental parser for [`ReferenceFileSystem` description](https://github.com/i
 }
 ```
 
-#### Demo
+#### Usage
 
-The [demo](./test.js) requires `nunjucks.renderString` to render jinja templates.
+```javascript
+import { parse } from './src/index.js';
 
-> NOTE: Use with caution. [From the docs](https://mozilla.github.io/nunjucks/api.html), 
-"`nunjucks` does not sandbox execution so **it is not safe to run user-defined 
-templates or inject user-defined content into template definitions**". 
+fetch('ref.json')
+  .then(res => res.json())
+  .then(spec => parse(spec))
+  .then(console.log);
 
-```bash
-npm install
-node test
-# Map(9) {
-#  'key0' => 'data',
-#  'key1' => [ 'http://target_url', 10000, 100 ],
-#  'key2' => [ 'http://server.domain/path', 10000, 100 ],
-#  'key3' => [ 'http://text', 10000, 100 ],
-#  'gen_key0' => [ 'http://server.domain/path_0', 1000, 1000 ],
-#  'gen_key1' => [ 'http://server.domain/path_1', 2000, 1000 ],
-#  'gen_key2' => [ 'http://server.domain/path_2', 3000, 1000 ],
-#  'gen_key3' => [ 'http://server.domain/path_3', 4000, 1000 ],
-#  'gen_key4' => [ 'http://server.domain/path_4', 5000, 1000 ]
-# }
+// Map(9) {
+//  'key0' => 'data',
+//  'key1' => [ 'http://target_url', 10000, 100 ],
+//  'key2' => [ 'http://server.domain/path', 10000, 100 ],
+//  'key3' => [ 'http://text', 10000, 100 ],
+//  'gen_key0' => [ 'http://server.domain/path_0', 1000, 1000 ],
+//  'gen_key1' => [ 'http://server.domain/path_1', 2000, 1000 ],
+//  'gen_key2' => [ 'http://server.domain/path_2', 3000, 1000 ],
+//  'gen_key3' => [ 'http://server.domain/path_3', 4000, 1000 ],
+//  'gen_key4' => [ 'http://server.domain/path_4', 5000, 1000 ]
+// }
 ```
