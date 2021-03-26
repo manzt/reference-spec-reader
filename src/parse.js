@@ -1,13 +1,32 @@
 // @ts-check
 /// <reference lib="esnext" />
 
+import { render } from './render.js';
+
+
 /**
- *
- * @param {import('./types').ReferenceFileSystem} spec
+ * @param {import('./types').ReferencesV0 | import('./types').ReferencesV1} spec
+ * @param {import('./types').RenderFn=} renderString
+ */
+export function parse(spec, renderString = render) {
+  // @ts-ignore
+  return "version" in spec ? parseV1(spec, renderString) : parseV0(spec);
+}
+
+/**
+ * @param {import('./types').ReferencesV0} spec
+ * @returns {Map<string, import('./types').Ref>}
+ */
+function parseV0(spec) {
+  return new Map(Object.entries(spec));
+}
+
+/**
+ * @param {import('./types').ReferencesV1} spec
  * @param {import('./types').RenderFn} renderString
  * @returns {Map<string, import('./types').Ref>}
  */
-export function parse(spec, renderString) {
+function parseV1(spec, renderString) {
   /**
    * @type {import('./types').RenderContext}
    */
@@ -23,7 +42,7 @@ export function parse(spec, renderString) {
   }
 
   /**
-   * @type {(t: string, o?: Record<string, string | number>) => string} t
+   * @type {(t: string, o?: Record<string, string | number>) => string}
    */
   const render = (t, o) => {
     return renderString(t, { ...context, ...o });
