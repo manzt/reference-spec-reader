@@ -14,19 +14,26 @@ class KeyError extends Error {
 
 export class ReferenceStore {
 
-  /** @param {Map<string, import('../types').Ref>} ref */
-  constructor(ref) {
+  /**
+   * @param {Map<string, import('../types').Ref>} ref
+   * @param {{ target?: string }=} opts
+   */
+  constructor(ref, opts = {}) {
     this.ref = ref;
+    this.target = opts.target;
   }
 
   /**
    * @param {string} url
-   * @param {import('../types').RenderFn=} renderString
+   * @param {{
+   *   target?: string;
+   *   renderString?: import('../types').RenderFn;
+   * }=} opts
    */
-  static async fromUrl(url, renderString) {
+  static async fromUrl(url, opts = {}) {
     const spec = await fetch(url).then((res) => res.json());
-    const ref = parse(spec, renderString);
-    return new ReferenceStore(ref);
+    const ref = parse(spec, opts.renderString);
+    return new ReferenceStore(ref, opts);
   }
 
   /** @param {string} url */
@@ -68,7 +75,11 @@ export class ReferenceStore {
       return __encoder.encode(entry).buffer;
     }
 
-    const [url, offset, size] = entry;
+    const [urlOrNull, offset, size] = entry;
+    const url = urlOrNull ?? this.target;
+    if (!url) {
+      throw Error(`No url for key ${key}, and no target url provided.`);
+    }
     const res = await this._fetch({ url, offset, size }, opts);
 
     if (res.status === 200 || res.status === 206) {

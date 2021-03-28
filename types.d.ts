@@ -13,7 +13,7 @@ export interface ReferencesV1 {
   refs: Record<string, Ref>;
 }
 
-export type Ref = string | [url: string] | [url: string, offset: number, length: number];
+export type Ref = string | [url: string | null] | [url: string | null, offset: number, length: number];
 
 export type RenderContext = Record<string, number | string | ((ctx: Record<string, string | number>) => string)>;
 

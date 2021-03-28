@@ -51,7 +51,7 @@ function parseV1(spec, renderString) {
     if (typeof ref === "string") {
       refs.set(key, ref);
     } else {
-      const url = render(ref[0]);
+      const url = ref[0]?.includes("{{") ? render(ref[0]) : ref[0];
       refs.set(key, ref.length === 1 ? [url] : [url, ref[1], ref[2]]);
     }
   }
