@@ -27,9 +27,7 @@ function parseV0(spec) {
  * @returns {Map<string, import('./types').Ref>}
  */
 function parseV1(spec, renderString) {
-  /**
-   * @type {import('./types').RenderContext}
-   */
+  /** @type {import('./types').RenderContext} */
   const context = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
@@ -41,16 +39,12 @@ function parseV1(spec, renderString) {
     }
   }
 
-  /**
-   * @type {(t: string, o?: Record<string, string | number>) => string}
-   */
+  /** @type {(t: string, o?: Record<string, string | number>) => string} */
   const render = (t, o) => {
     return renderString(t, { ...context, ...o });
   };
 
-  /**
-   * @type {Map<string, import('./types').Ref>}
-   */
+  /** @type {Map<string, import('./types').Ref>} */
   const refs = new Map();
 
   for (const [key, ref] of Object.entries(spec.refs)) {
@@ -87,6 +81,7 @@ function* iterDims(dimensions) {
   }
 }
 
+/** @param {...any[]} iterables */
 function* product(...iterables) {
   if (iterables.length === 0) {
     return;
@@ -114,6 +109,7 @@ function* product(...iterables) {
   }
 }
 
+/** @param {import('./types').Range} rng */
 function* range({ stop, start = 0, step = 1 }) {
   for (let i = start; i < stop; i += step) {
     yield i;

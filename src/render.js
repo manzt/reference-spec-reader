@@ -3,6 +3,7 @@
 
 /**
  * @param {string} template
+ * @param {RegExp=} re
  */
 function parse(template, re = /{{(.*?)}}/) {
   let result = re.exec(template);
@@ -27,13 +28,10 @@ function parse(template, re = /{{(.*?)}}/) {
   return parts;
 }
 
-/**
- * @param {string} str
- */
+/** @param {string} str */
 function matchFn(str) {
-
   const match = str.match(/(?<fname>[A-Z_][A-Z_1-9]*)\((?<args>[^)]+)\)/i);
-  if (!match) return;
+  if (!match?.groups) return;
 
   const { fname, args } = match.groups;
   const ctx = Object.fromEntries(args.split(',').map(kwarg => {
@@ -52,9 +50,7 @@ const numbers = "01234569789";
 const expr = "()*/+-";
 const space = " ";
 const valid = new Set(alphabet + alphabet.toUpperCase() + numbers + expr + space);
-/**
- * @param {string} str
- */
+/** @param {string} str */
 function matchMathEval(str) {
   for (let i = 0; i < str.length; i++) {
     if (!valid.has(str.charAt(i))) return;
@@ -62,9 +58,7 @@ function matchMathEval(str) {
   return parse(str, /[A-Za-z_][A-Za-z0-9_]*/ig);
 }
 
-/**
- * @type {import('./types').RenderFn} 
- */
+/** @type {import('./types').RenderFn} */
 export function render(template, context) {
   const grps = parse(template);
   return grps.map(grp => {
