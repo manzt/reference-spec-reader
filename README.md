@@ -80,7 +80,7 @@ const ref = parse(spec, nunjucks.renderString);
 A `Zarr.js` store reference implementation. Uses `fetch` API.
 
 <a name="fromJSON" href="#fromJSON">#</a>
-<em>ReferenceStore</em>.<b>fromJSON</b>(<i>url</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<em>ReferenceStore</em>.<b>fromJSON</b>(<i>data</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
 * *data*: A string in a supported JSON format, or a corresponding Object instance. Must adhere to `v0` or `v1` reference specification.
 * *options*:
