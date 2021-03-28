@@ -113,6 +113,7 @@ export class ReferenceStore {
 const __toBinary = (() => {
   var table = new Uint8Array(128)
   for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i
+  // @ts-ignore
   return base64 => {
     // @ts-ignore
     var n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0)

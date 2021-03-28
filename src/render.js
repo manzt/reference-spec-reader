@@ -30,9 +30,8 @@ function parse(template, re = /{{(.*?)}}/) {
 
 /** @param {string} str */
 function matchFn(str) {
-
   const match = str.match(/(?<fname>[A-Z_][A-Z_1-9]*)\((?<args>[^)]+)\)/i);
-  if (!match) return;
+  if (!match?.groups) return;
 
   const { fname, args } = match.groups;
   const ctx = Object.fromEntries(args.split(',').map(kwarg => {

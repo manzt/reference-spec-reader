@@ -4,6 +4,7 @@
   ],
   "compilerOptions": {
     "target": "ESNext",
+    "strict": true,
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,

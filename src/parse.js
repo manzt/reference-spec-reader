@@ -109,6 +109,7 @@ function* product(...iterables) {
   }
 }
 
+/** @param {import('./types').Range} rng */
 function* range({ stop, start = 0, step = 1 }) {
   for (let i = start; i < stop; i += step) {
     yield i;
