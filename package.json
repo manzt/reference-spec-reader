@@ -5,8 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "exports": {
-    ".": "./src/parse.js",
-    "./store": "./src/store.js"
+    ".": "./src/index.js"
   },
   "dependencies": {},
   "devDependencies": {
