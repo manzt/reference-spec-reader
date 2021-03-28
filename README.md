@@ -42,7 +42,11 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 
 <a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
 
-Parses both `v0` and `v1` references into `Map<string, string | [url: string] | [url: string, offset: number, length: number]>`.
+Parses both `v0` and `v1` references into `Map<string, Ref>`. A `Ref` is a union type of the following:
+
+- `string`: Inline ascii/base64 encoded data.
+- `[url: string]`: A url for a whole file.
+- `[url: string | null, offset: number, length: number]`: A tuple describing a binary section of a url.
 
 ```javascript
 const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
@@ -75,19 +79,28 @@ const ref = parse(spec, nunjucks.renderString);
 
 A `Zarr.js` store implementation using the parsed references.
 
-<a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>ref</i>) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>references</i>[, <i>options</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
 Initialize a store from parsed references.
+
+* *references*: `Map<string, Ref>`.
+* *options*:
+  * *target*: A default target url for the reference.
 
 ```javascript
 const ref = parse(spec);
 const store = new ReferenceStore(ref);
 ```
 
-<a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>renderString<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
 A convenience method to initialize the store.
 
+* *url*: A URL for a valid `v0` or `v1` reference implementation.
+* *options*:
+  * *target*: A default target url for the reference.
+  * *renderString*: A custom `renderString` function.
+
 ```javascript
-const store = await ReferenceStore.fromUrl('http://localhost:8080/ref.json');
+const store = await ReferenceStore.fromJSON('http://localhost:8080/ref.json');
 ```

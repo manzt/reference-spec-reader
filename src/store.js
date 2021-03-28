@@ -14,12 +14,12 @@ class KeyError extends Error {
 
 export class ReferenceStore {
 
-  /**
-   * @param {Map<string, import('../types').Ref>} ref
+  /** 
+   * @param {Map<string, import('../types').Ref>} references
    * @param {{ target?: string }=} opts
    */
-  constructor(ref, opts = {}) {
-    this.ref = ref;
+  constructor(references, opts = {}) {
+    this.ref = references;
     this.target = opts.target;
   }
 
