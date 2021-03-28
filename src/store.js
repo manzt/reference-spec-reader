@@ -24,14 +24,14 @@ export class ReferenceStore {
   }
 
   /**
-   * @param {string} url
+   * @param {string | import('../types').ReferencesV0 | import('../types').ReferencesV1} data
    * @param {{
    *   target?: string;
    *   renderString?: import('../types').RenderFn;
    * }=} opts
    */
-  static async fromUrl(url, opts = {}) {
-    const spec = await fetch(url).then((res) => res.json());
+  static fromJSON(data, opts = {}) {
+    const spec = typeof data === 'string' ? JSON.parse(data) : data;
     const ref = parse(spec, opts.renderString);
     return new ReferenceStore(ref, opts);
   }

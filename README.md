@@ -77,30 +77,27 @@ const ref = parse(spec, nunjucks.renderString);
 
 ### `ReferenceStore`
 
-A `Zarr.js` store implementation using the parsed references.
+A `Zarr.js` store reference implementation. Uses `fetch` API.
 
-<a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>references</i>[, <i>options</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<a name="fromJSON" href="#fromJSON">#</a>
+<em>ReferenceStore</em>.<b>fromJSON</b>(<i>url</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
-Initialize a store from parsed references.
-
-* *references*: `Map<string, Ref>`.
-* *options*:
-  * *target*: A default target url for the reference.
-
-```javascript
-const ref = parse(spec);
-const store = new ReferenceStore(ref);
-```
-
-<a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
-
-A convenience method to initialize the store.
-
-* *url*: A URL for a valid `v0` or `v1` reference implementation.
+* *data*: A string in a supported JSON format, or a corresponding Object instance. Must adhere to `v0` or `v1` reference specification.
 * *options*:
   * *target*: A default target url for the reference.
   * *renderString*: A custom `renderString` function.
 
 ```javascript
-const store = await ReferenceStore.fromJSON('http://localhost:8080/ref.json');
+// create store from an input JSON string (v0 references).
+ReferenceStore.fromJSON(`{"key0":"data","key1":["http://server.domain",1000,100]}`);
+```
+
+```javascript
+// create a store from an input JSON string loaded from `url`
+ReferenceStore.fromJSON(await fetch(url).then(res => res.text()));
+```
+
+```javascript
+// create a store from an input JSON object loaded from `url`
+ReferenceStore.fromJSON(await fetch(url).then(res => res.json()));
 ```
