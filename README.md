@@ -89,7 +89,7 @@ A `Zarr.js` store reference implementation. Uses `fetch` API.
 
 ```javascript
 // create store from an input JSON string (v0 references).
-ReferenceStore.fromJSON(`{"key0":"data","key1":["http://server.domain",1000,100]}`);
+ReferenceStore.fromJSON(`{"key0":"data","key1":"base64:aGVsbG8sIHdvcmxk"}`);
 ```
 
 ```javascript
@@ -100,4 +100,10 @@ ReferenceStore.fromJSON(await fetch(url).then(res => res.text()));
 ```javascript
 // create a store from an input JSON object loaded from `url`
 ReferenceStore.fromJSON(await fetch(url).then(res => res.json()));
+```
+
+```javascript
+// create a store from an input JSON object loaded from `url` with default binary target
+const res = await fetch('http://localhost:8080/data.tif.json');
+ReferenceStore.fromJSON(await res.json(), { target: 'http://localhost:8080/data.tif' });
 ```
