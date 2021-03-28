@@ -5,8 +5,8 @@ import { render } from './render.js';
 
 
 /**
- * @param {import('./types').ReferencesV0 | import('./types').ReferencesV1} spec
- * @param {import('./types').RenderFn=} renderString
+ * @param {import('../types').ReferencesV0 | import('../types').ReferencesV1} spec
+ * @param {import('../types').RenderFn=} renderString
  */
 export function parse(spec, renderString = render) {
   // @ts-ignore
@@ -14,20 +14,20 @@ export function parse(spec, renderString = render) {
 }
 
 /**
- * @param {import('./types').ReferencesV0} spec
- * @returns {Map<string, import('./types').Ref>}
+ * @param {import('../types').ReferencesV0} spec
+ * @returns {Map<string, import('../types').Ref>}
  */
 function parseV0(spec) {
   return new Map(Object.entries(spec));
 }
 
 /**
- * @param {import('./types').ReferencesV1} spec
- * @param {import('./types').RenderFn} renderString
- * @returns {Map<string, import('./types').Ref>}
+ * @param {import('../types').ReferencesV1} spec
+ * @param {import('../types').RenderFn} renderString
+ * @returns {Map<string, import('../types').Ref>}
  */
 function parseV1(spec, renderString) {
-  /** @type {import('./types').RenderContext} */
+  /** @type {import('../types').RenderContext} */
   const context = {};
   for (const [key, template] of Object.entries(spec.templates)) {
     // TODO: better check for whether a template or not
@@ -44,7 +44,7 @@ function parseV1(spec, renderString) {
     return renderString(t, { ...context, ...o });
   };
 
-  /** @type {Map<string, import('./types').Ref>} */
+  /** @type {Map<string, import('../types').Ref>} */
   const refs = new Map();
 
   for (const [key, ref] of Object.entries(spec.refs)) {
@@ -70,7 +70,7 @@ function parseV1(spec, renderString) {
 }
 
 /**
- * @param {Record<string, import('./types').Range | number[]>} dimensions
+ * @param {Record<string, import('../types').Range | number[]>} dimensions
  * @returns {Generator<Record<string, number>>}
  */
 function* iterDims(dimensions) {
@@ -109,7 +109,7 @@ function* product(...iterables) {
   }
 }
 
-/** @param {import('./types').Range} rng */
+/** @param {import('../types').Range} rng */
 function* range({ stop, start = 0, step = 1 }) {
   for (let i = start; i < stop; i += step) {
     yield i;

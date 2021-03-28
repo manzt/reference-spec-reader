@@ -7,7 +7,8 @@
   "types": "types/index.d.ts",
   "files": [
     "src",
-    "types"
+    "types",
+    "types.d.ts"
   ],
   "exports": {
     ".": "./src/index.js"
@@ -21,7 +22,7 @@
   "scripts": {
     "test:ci": "tsc && npm test",
     "test": "uvu test",
-    "prepare": "tsc && cp src/types.d.ts types/"
+    "prepare": "tsc"
   },
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",

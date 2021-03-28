@@ -14,14 +14,14 @@ class KeyError extends Error {
 
 export class ReferenceStore {
 
-  /** @param {Map<string, import('./types').Ref>} ref */
+  /** @param {Map<string, import('../types').Ref>} ref */
   constructor(ref) {
     this.ref = ref;
   }
 
   /**
    * @param {string} url
-   * @param {import('./types').RenderFn=} renderString
+   * @param {import('../types').RenderFn=} renderString
    */
   static async fromUrl(url, renderString) {
     const spec = await fetch(url).then((res) => res.json());

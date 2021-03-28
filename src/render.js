@@ -58,7 +58,7 @@ function matchMathEval(str) {
   return parse(str, /[A-Za-z_][A-Za-z0-9_]*/ig);
 }
 
-/** @type {import('./types').RenderFn} */
+/** @type {import('../types').RenderFn} */
 export function render(template, context) {
   const grps = parse(template);
   return grps.map(grp => {
