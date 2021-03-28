@@ -5,6 +5,7 @@ import { parse } from './parse.js';
 
 class KeyError extends Error {
   __zarr__ = "KeyError";
+  /** @param {string} msg */
   constructor(msg) {
     super(msg);
     this.name = "KeyError";
@@ -13,9 +14,7 @@ class KeyError extends Error {
 
 export class ReferenceStore {
 
-  /**
-   * @param {Map<string, import('./types').Ref>} ref 
-   */
+  /** @param {Map<string, import('./types').Ref>} ref */
   constructor(ref) {
     this.ref = ref;
   }
@@ -30,9 +29,7 @@ export class ReferenceStore {
     return new ReferenceStore(ref);
   }
 
-  /**
-   * @param {string} url 
-   */
+  /** @param {string} url */
   _url(url) {
     const [protocol, _path] = url.split('://');
     if (protocol === 'https' || protocol === 'http') {
@@ -81,9 +78,7 @@ export class ReferenceStore {
     throw new Error(`Request unsuccessful for key ${key}. Response status: ${res.status}.`);
   }
 
-  /**
-   * @param {string} key
-   */
+  /** @param {string} key */
   async containsItem(key) {
     return this.ref.has(key);
   }
