@@ -42,7 +42,11 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 
 <a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
 
-Parses both `v0` and `v1` references into `Map<string, string | [url: string] | [url: string, offset: number, length: number]>`.
+Parses both `v0` and `v1` references into `Map<string, Ref>`. A `Ref` is a union type of the following:
+
+- `string`: Inline ascii/base64 encoded data.
+- `[url: string]`: A url for a whole file.
+- `[url: string | null, offset: number, length: number]`: A tuple describing a binary section of a url.
 
 ```javascript
 const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json());
@@ -73,21 +77,33 @@ const ref = parse(spec, nunjucks.renderString);
 
 ### `ReferenceStore`
 
-A `Zarr.js` store implementation using the parsed references.
+A `Zarr.js` store reference implementation. Uses `fetch` API.
 
-<a name="ReferenceStore" href="#ReferenceStore">#</a>new <b>ReferenceStore</b>(<i>ref</i>) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<a name="fromJSON" href="#fromJSON">#</a>
+<em>ReferenceStore</em>.<b>fromJSON</b>(<i>url</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
-Initialize a store from parsed references.
+* *data*: A string in a supported JSON format, or a corresponding Object instance. Must adhere to `v0` or `v1` reference specification.
+* *options*:
+  * *target*: A default target url for the reference.
+  * *renderString*: A custom `renderString` function.
 
 ```javascript
-const ref = parse(spec);
-const store = new ReferenceStore(ref);
+// create store from an input JSON string (v0 references).
+ReferenceStore.fromJSON(`{"key0":"data","key1":"base64:aGVsbG8sIHdvcmxk"}`);
 ```
 
-<a name="ReferenceStore" href="#ReferenceStore">#</a><b>ReferenceStore.fromUrl</b>(<i>url</i>, [, <i>renderString<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
-
-A convenience method to initialize the store.
+```javascript
+// create a store from an input JSON string loaded from `url`
+ReferenceStore.fromJSON(await fetch(url).then(res => res.text()));
+```
 
 ```javascript
-const store = await ReferenceStore.fromUrl('http://localhost:8080/ref.json');
+// create a store from an input JSON object loaded from `url`
+ReferenceStore.fromJSON(await fetch(url).then(res => res.json()));
+```
+
+```javascript
+// create a store from an input JSON object loaded from `url` with default binary target
+const res = await fetch('http://localhost:8080/data.tif.json');
+ReferenceStore.fromJSON(await res.json(), { target: 'http://localhost:8080/data.tif' });
 ```
