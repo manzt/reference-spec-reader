@@ -34,12 +34,8 @@ test('Throws for missing target', async () => {
 
 test('Static constructor', () => {
   const str = '{"key0":"data","key1":"base64:aGVsbG8sIHdvcmxk","key2":[null,1000,100]}';
-  const spec = {
-    key0: 'data',
-    key1: 'base64:aGVsbG8sIHdvcmxk',
-    key2: [null, 1000, 100],
-  };
   assert.equal(ReferenceStore.fromJSON(str).ref, ref);
+  const spec = { key0: 'data', key1: 'base64:aGVsbG8sIHdvcmxk', key2: [null, 1000, 100] };
   assert.equal(ReferenceStore.fromJSON(spec).ref, ref);
 });
 
