@@ -47,7 +47,7 @@ function parseV1(spec, renderString) {
   /** @type {Map<string, import('../types').Ref>} */
   const refs = new Map();
 
-  for (const [key, ref] of Object.entries(spec.refs)) {
+  for (const [key, ref] of Object.entries(spec.refs ?? {})) {
     if (typeof ref === "string") {
       refs.set(key, ref);
     } else {

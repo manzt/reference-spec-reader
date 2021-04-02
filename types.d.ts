@@ -10,7 +10,7 @@ export interface ReferencesV1 {
     length: string;
     dimensions: Record<string, Range | number[]>;
   }[];
-  refs: Record<string, Ref>;
+  refs?: Record<string, Ref>;
 }
 
 export type Ref = string | [url: string | null] | [url: string | null, offset: number, length: number];
