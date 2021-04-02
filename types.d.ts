@@ -2,8 +2,8 @@ export type ReferencesV0 = Record<string, Ref>;
 
 export interface ReferencesV1 {
   version: 1;
-  templates: Record<string, string>;
-  gen: {
+  templates?: Record<string, string>;
+  gen?: {
     key: string;
     url: string;
     offset: string;

@@ -38,9 +38,15 @@ export class ReferenceStore {
 
   /** @param {string} url */
   _url(url) {
-    const [protocol, _path] = url.split('://');
+    const [protocol, path] = url.split('://');
     if (protocol === 'https' || protocol === 'http') {
       return url;
+    }
+    if (protocol === 'gc') {
+      return `https://storage.googleapis.com/${path}`;
+    }
+    if (protocol === 's3') {
+      return `https://s3.amazonaws.com/${path}`;
     }
     throw Error('Protocol not supported, got: ' + JSON.stringify(protocol));
   }
