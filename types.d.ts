@@ -2,15 +2,15 @@ export type ReferencesV0 = Record<string, Ref>;
 
 export interface ReferencesV1 {
   version: 1;
-  templates: Record<string, string>;
-  gen: {
+  templates?: Record<string, string>;
+  gen?: {
     key: string;
     url: string;
     offset: string;
     length: string;
     dimensions: Record<string, Range | number[]>;
   }[];
-  refs: Record<string, Ref>;
+  refs?: Record<string, Ref>;
 }
 
 export type Ref = string | [url: string | null] | [url: string | null, offset: number, length: number];

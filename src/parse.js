@@ -29,7 +29,7 @@ function parseV0(spec) {
 function parseV1(spec, renderString) {
   /** @type {import('../types').RenderContext} */
   const context = {};
-  for (const [key, template] of Object.entries(spec.templates)) {
+  for (const [key, template] of Object.entries(spec.templates ?? {})) {
     // TODO: better check for whether a template or not
     if (template.includes("{{")) {
       // Need to register filter in environment
@@ -47,7 +47,7 @@ function parseV1(spec, renderString) {
   /** @type {Map<string, import('../types').Ref>} */
   const refs = new Map();
 
-  for (const [key, ref] of Object.entries(spec.refs)) {
+  for (const [key, ref] of Object.entries(spec.refs ?? {})) {
     if (typeof ref === "string") {
       refs.set(key, ref);
     } else {
@@ -56,7 +56,7 @@ function parseV1(spec, renderString) {
     }
   }
 
-  for (const g of spec.gen) {
+  for (const g of spec.gen ?? []) {
     for (const dims of iterDims(g.dimensions)) {
       const key = render(g.key, dims);
       const url = render(g.url, dims);
