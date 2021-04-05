@@ -3,6 +3,7 @@ import * as assert from 'uvu/assert';
 
 import { ReferenceStore } from '../src/store.js';
 
+// prettier-ignore
 const ref = new Map()
   .set('key0', 'data')
   .set('key1', 'base64:aGVsbG8sIHdvcmxk')

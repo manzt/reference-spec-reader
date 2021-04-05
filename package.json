@@ -24,8 +24,8 @@
     "test:ci": "npm run lint && tsc && npm test",
     "test": "uvu test",
     "prepare": "tsc",
-    "format": "prettier --write src/**/*.js",
-    "lint": "prettier --check src/**/*.js"
+    "format": "prettier --write src/**/*.js test/**/*.js",
+    "lint": "prettier --check src/**/*.js test/**/*.js"
   },
   "keywords": [],
   "author": "manzt <trevor.j.manz@gmail.com>",
