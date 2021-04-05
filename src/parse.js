@@ -1,8 +1,7 @@
 // @ts-check
 /// <reference lib="esnext" />
 
-import { render } from './render.js';
-
+import { render } from "./render.js";
 
 /**
  * @param {import('../types').ReferencesV0 | import('../types').ReferencesV1} spec
@@ -60,9 +59,15 @@ function parseV1(spec, renderString) {
     for (const dims of iterDims(g.dimensions)) {
       const key = render(g.key, dims);
       const url = render(g.url, dims);
-      const offset = render(g.offset, dims);
-      const length = render(g.length, dims);
-      refs.set(key, [url, parseInt(offset), parseInt(length)]);
+      if (g.offset && g.length) {
+        // [url, offset, length]
+        const offset = render(g.offset, dims);
+        const length = render(g.length, dims);
+        refs.set(key, [url, parseInt(offset), parseInt(length)]);
+      } else {
+        // [url]
+        refs.set(key, [url]);
+      }
     }
   }
 
@@ -75,7 +80,9 @@ function parseV1(spec, renderString) {
  */
 function* iterDims(dimensions) {
   const keys = Object.keys(dimensions);
-  const iterables = Object.values(dimensions).map((i) => (Array.isArray(i) ? i : [...range(i)]));
+  const iterables = Object.values(dimensions).map((i) =>
+    Array.isArray(i) ? i : [...range(i)]
+  );
   for (const values of product(...iterables)) {
     yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));
   }
@@ -92,7 +99,7 @@ function* product(...iterables) {
   if (results.some((r) => r.done)) {
     throw new Error("Input contains an empty iterator.");
   }
-  for (let i = 0; ;) {
+  for (let i = 0; ; ) {
     if (results[i].done) {
       // reset the current iterator
       iterators[i] = iterables[i][Symbol.iterator]();
