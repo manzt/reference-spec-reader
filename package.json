@@ -21,7 +21,7 @@
     "uvu": "^0.5.1"
   },
   "scripts": {
-    "test:ci": "tsc && npm test",
+    "test:ci": "npm run lint && tsc && npm test",
     "test": "uvu test",
     "prepare": "tsc",
     "format": "prettier --write src/**/*.js",
