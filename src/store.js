@@ -4,17 +4,16 @@
 import { parse } from './parse.js';
 
 class KeyError extends Error {
-  __zarr__ = "KeyError";
+  __zarr__ = 'KeyError';
   /** @param {string} msg */
   constructor(msg) {
     super(msg);
-    this.name = "KeyError";
+    this.name = 'KeyError';
   }
 }
 
 export class ReferenceStore {
-
-  /** 
+  /**
    * @param {Map<string, import('../types').Ref>} references
    * @param {{ target?: string }=} opts
    */
@@ -64,8 +63,8 @@ export class ReferenceStore {
   }
 
   /**
-   * @param {string} key 
-   * @param {RequestInit} opts 
+   * @param {string} key
+   * @param {RequestInit} opts
    */
   async getItem(key, opts = {}) {
     const entry = this.ref.get(key);
@@ -105,8 +104,8 @@ export class ReferenceStore {
   }
 
   /**
-   * @param {string} key 
-   * @param {ArrayBuffer} value 
+   * @param {string} key
+   * @param {ArrayBuffer} value
    * @returns {never}
    */
   setItem(key, value) {
@@ -114,7 +113,7 @@ export class ReferenceStore {
   }
 
   /**
-   * @param {string} key 
+   * @param {string} key
    * @returns {never}
    */
   deleteItem(key) {
@@ -128,21 +127,24 @@ export class ReferenceStore {
  * @type {(str: string) => Uint8Array}
  */
 const __toBinary = (() => {
-  var table = new Uint8Array(128)
-  for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i
+  var table = new Uint8Array(128);
+  for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i;
   // @ts-ignore
   return base64 => {
     // @ts-ignore
-    var n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0)
-    for (var i = 0, j = 0; i < n;) {
-      var c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)]
-      var c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)]
-      bytes[j++] = (c0 << 2) | (c1 >> 4)
-      bytes[j++] = (c1 << 4) | (c2 >> 2)
-      bytes[j++] = (c2 << 6) | c3
+    var n = base64.length,
+      bytes = new Uint8Array((((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3) / 4) | 0);
+    for (var i = 0, j = 0; i < n; ) {
+      var c0 = table[base64.charCodeAt(i++)],
+        c1 = table[base64.charCodeAt(i++)];
+      var c2 = table[base64.charCodeAt(i++)],
+        c3 = table[base64.charCodeAt(i++)];
+      bytes[j++] = (c0 << 2) | (c1 >> 4);
+      bytes[j++] = (c1 << 4) | (c2 >> 2);
+      bytes[j++] = (c2 << 6) | c3;
     }
-    return bytes
-  }
-})()
+    return bytes;
+  };
+})();
 
 const __encoder = new TextEncoder();
