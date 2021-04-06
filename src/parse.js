@@ -3,14 +3,13 @@
 
 import { render } from './render.js';
 
-
 /**
  * @param {import('../types').ReferencesV0 | import('../types').ReferencesV1} spec
  * @param {import('../types').RenderFn=} renderString
  */
 export function parse(spec, renderString = render) {
   // @ts-ignore
-  return "version" in spec ? parseV1(spec, renderString) : parseV0(spec);
+  return 'version' in spec ? parseV1(spec, renderString) : parseV0(spec);
 }
 
 /**
@@ -31,9 +30,9 @@ function parseV1(spec, renderString) {
   const context = {};
   for (const [key, template] of Object.entries(spec.templates ?? {})) {
     // TODO: better check for whether a template or not
-    if (template.includes("{{")) {
+    if (template.includes('{{')) {
       // Need to register filter in environment
-      context[key] = (ctx) => renderString(template, ctx);
+      context[key] = ctx => renderString(template, ctx);
     } else {
       context[key] = template;
     }
@@ -48,10 +47,10 @@ function parseV1(spec, renderString) {
   const refs = new Map();
 
   for (const [key, ref] of Object.entries(spec.refs ?? {})) {
-    if (typeof ref === "string") {
+    if (typeof ref === 'string') {
       refs.set(key, ref);
     } else {
-      const url = ref[0]?.includes("{{") ? render(ref[0]) : ref[0];
+      const url = ref[0]?.includes('{{') ? render(ref[0]) : ref[0];
       refs.set(key, ref.length === 1 ? [url] : [url, ref[1], ref[2]]);
     }
   }
@@ -60,9 +59,15 @@ function parseV1(spec, renderString) {
     for (const dims of iterDims(g.dimensions)) {
       const key = render(g.key, dims);
       const url = render(g.url, dims);
-      const offset = render(g.offset, dims);
-      const length = render(g.length, dims);
-      refs.set(key, [url, parseInt(offset), parseInt(length)]);
+      if (g.offset && g.length) {
+        // [url, offset, length]
+        const offset = render(g.offset, dims);
+        const length = render(g.length, dims);
+        refs.set(key, [url, parseInt(offset), parseInt(length)]);
+      } else {
+        // [url]
+        refs.set(key, [url]);
+      }
     }
   }
 
@@ -75,7 +80,7 @@ function parseV1(spec, renderString) {
  */
 function* iterDims(dimensions) {
   const keys = Object.keys(dimensions);
-  const iterables = Object.values(dimensions).map((i) => (Array.isArray(i) ? i : [...range(i)]));
+  const iterables = Object.values(dimensions).map(i => (Array.isArray(i) ? i : [...range(i)]));
   for (const values of product(...iterables)) {
     yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));
   }
@@ -87,12 +92,12 @@ function* product(...iterables) {
     return;
   }
   // make a list of iterators from the iterables
-  const iterators = iterables.map((it) => it[Symbol.iterator]());
-  const results = iterators.map((it) => it.next());
-  if (results.some((r) => r.done)) {
-    throw new Error("Input contains an empty iterator.");
+  const iterators = iterables.map(it => it[Symbol.iterator]());
+  const results = iterators.map(it => it.next());
+  if (results.some(r => r.done)) {
+    throw new Error('Input contains an empty iterator.');
   }
-  for (let i = 0; ;) {
+  for (let i = 0; ; ) {
     if (results[i].done) {
       // reset the current iterator
       iterators[i] = iterables[i][Symbol.iterator]();
