@@ -13,7 +13,6 @@
   "exports": {
     ".": "./src/index.js"
   },
-  "dependencies": {},
   "devDependencies": {
     "nunjucks": "^3.2.3",
     "prettier": "^2.2.1",
