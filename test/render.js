@@ -58,8 +58,8 @@ test('Throws', () => {
     ['{{ $ i }}', { i: 10 }],
     ['{{ i + 2 }}', { i: 'hello' }],
     [`http://{{ f(c='text') }}`, {}],
-    [`{{ i i }}`, { i: 10 }],
-    [`{{ i + 2 }}`, { i: '10' }],
+    ['{{ i i }}', { i: 10 }],
+    ['{{ i + 2 }}', { i: '10' }],
   ].forEach(([template, ctx]) => {
     assert.throws(() => render(template, ctx));
   });
