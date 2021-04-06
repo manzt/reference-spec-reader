@@ -1,30 +1,28 @@
 ## reference-spec-reader
 
 Experimental parser for [`ReferenceFileSystem` description](https://github.com/intake/fsspec-reference-maker).
-This repository also provides a `ReferenceStore` implementation, intended as a storage backend for
-[`Zarr.js`](https://github.com/gzuidhof/zarr.js).
-
-## Example V1 spec (JSON)
+This repository also provides a `ReferenceStore` implementation, a storage backend for
+[`Zarr.js`](https://github.com/gzuidhof/zarr.js). An example of the V1 specification is shown
+below:
 
 ```json
 // ref.json
 {
   "version": 1,
   "templates": {
-      "u": "server.domain/path",
-      "f": "{{ c }}"
+    "u": "server.domain/path",
+    "f": "{{ c }}"
   },
   "gen": [
-      {
-        "key": "gen_key{{ i }}",
-        "url": "http://{{ u }}_{{ i }}",
-        "offset": "{{ (i + 1) * 1000 }}",
-        "length": "1000",
-        "dimensions": 
-          {
-            "i": {"stop":  5}
-          }
-      }   
+    {
+      "key": "gen_key{{ i }}",
+      "url": "http://{{ u }}_{{ i }}",
+      "offset": "{{ (i + 1) * 1000 }}",
+      "length": "1000",
+      "dimensions": {
+        "i": { "stop": 5 }
+      }
+    }
   ],
   "refs": {
     "key0": "data",
@@ -37,8 +35,6 @@ This repository also provides a `ReferenceStore` implementation, intended as a s
 ```
 
 ## API Reference
-
-### `parse`
 
 <a name="parse" href="#parse">#</a><b>parse</b>(<i>spec</i>[, <i>renderString</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/parse.js)
 
@@ -66,7 +62,7 @@ console.log(ref);
 // }
 ```
 
-This library includes a minimal built-in `render` method to render jinja-templates included in the `v1` spec. 
+This library includes a minimal built-in `render` method to render jinja-templates included in the `v1` spec.
 This method can be overriden by providing a custom `renderString` function as a second argument.
 
 ```javascript
@@ -75,17 +71,15 @@ const spec = await fetch('http://localhost:8080/ref.json').then(res => res.json(
 const ref = parse(spec, nunjucks.renderString);
 ```
 
-### `ReferenceStore`
-
-A `Zarr.js` store reference implementation. Uses `fetch` API.
-
 <a name="fromJSON" href="#fromJSON">#</a>
 <em>ReferenceStore</em>.<b>fromJSON</b>(<i>data</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
-* *data*: A string in a supported JSON format, or a corresponding Object instance. Must adhere to `v0` or `v1` reference specification.
-* *options*:
-  * *target*: A default target url for the reference.
-  * *renderString*: A custom `renderString` function.
+A `Zarr.js` store reference implementation. Uses `fetch` API.
+
+- _data_: A string in a supported JSON format, or a corresponding Object instance. Must adhere to `v0` or `v1` reference specification.
+- _options_:
+  - _target_: A default target url for the reference.
+  - _renderString_: A custom `renderString` function.
 
 ```javascript
 // create store from an input JSON string (v0 references).
@@ -106,4 +100,48 @@ ReferenceStore.fromJSON(await fetch(url).then(res => res.json()));
 // create a store from an input JSON object loaded from `url` with default binary target
 const res = await fetch('http://localhost:8080/data.tif.json');
 ReferenceStore.fromJSON(await res.json(), { target: 'http://localhost:8080/data.tif' });
+```
+
+## Usage
+
+This package is written as a pure ES Module and is intended for use in various JavaScript
+runtimes. It can be imported from a CDN via URL directly, or installed as a dependency
+from `npm` for use in Node.js or via a bundler.
+
+```javascript
+// Browser or Deno via a CDN
+import { ReferenceStore, parse } from 'https://cdn.skypack.dev/reference-spec-reader@<version>';
+
+// Node.js or bundler
+import { ReferenceStore, parse } from 'referece-spec-reader';
+```
+
+## Development
+
+I welcome any input, feedback, bug reports, and contributions. This project requires Node.js
+(version 12 or later) for running the test suite and linting/formating the code.
+
+### Installation
+
+```bash
+cd reference-spec-reader
+npm install
+```
+
+### Running tests
+
+```bash
+npm test # runs unit tests only
+npm run test:ci # runs CI test suite (type-checking, linting, and unit tests)
+```
+
+> NOTE: If making a PR, please run `npm run format` to auto-format your changes. The linting
+> check will fail for unformatted code.
+
+### Publishing to `npm`
+
+```bash
+npm version [<new version> | major | minor | patch]
+npm publish --dry-run # make sure correct files are included in tarball
+npm publish
 ```
