@@ -72,7 +72,7 @@ const ref = parse(spec, nunjucks.renderString);
 ```
 
 <a name="fromJSON" href="#fromJSON">#</a>
-<em>ReferenceStore</em>.<b>fromJSON</b>(<i>data</i>, [, <i>options<i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
+<em>ReferenceStore</em>.<b>fromJSON</b>(<i>data</i>, [, <i>options</i>]) · [Source](https://github.com/manzt/reference-spec-reader/blob/master/src/store.js)
 
 A `Zarr.js` store reference implementation. Uses `fetch` API.
 
