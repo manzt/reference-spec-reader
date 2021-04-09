@@ -59,7 +59,7 @@ function parseV1(spec, renderString) {
     for (const dims of iterDims(g.dimensions)) {
       const key = render(g.key, dims);
       const url = render(g.url, dims);
-      if (g.offset && g.length) {
+      if ('offset' in g && 'length' in g) {
         // [url, offset, length]
         const offset = render(g.offset, dims);
         const length = render(g.length, dims);
