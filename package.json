@@ -10,8 +10,9 @@
     "types",
     "types.d.ts"
   ],
-  "exports": {
-    ".": "./src/index.js"
+  "exports": "./src/index.js",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
   "devDependencies": {
     "nunjucks": "^3.2.3",
