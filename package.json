@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "nunjucks": "^3.2.3",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.3",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5",
     "uvu": "^0.5.1"
   },
   "scripts": {
@@ -32,8 +32,10 @@
   "license": "MIT",
   "prettier": {
     "singleQuote": true,
-    "printWidth": 120,
+    "printWidth": 100,
     "arrowParens": "avoid",
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "useTabs": true,
+    "tabWidth": 4
   }
 }
