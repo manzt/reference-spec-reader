@@ -2,11 +2,10 @@
 
 Experimental parser for [`ReferenceFileSystem` description](https://github.com/intake/fsspec-reference-maker).
 This repository also provides a `ReferenceStore` implementation, a storage backend for
-[`Zarr.js`](https://github.com/gzuidhof/zarr.js). An example of the V1 specification is shown
+[`Zarr.js`](https://github.com/gzuidhof/zarr.js). An example of the V1 specification (JSON) is shown
 below:
 
 ```json
-// ref.json
 {
   "version": 1,
   "templates": {
