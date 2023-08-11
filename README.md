@@ -105,7 +105,7 @@ ReferenceStore.fromJSON(await res.json(), { target: 'http://localhost:8080/data.
 
 This package is written as a pure ES Module and is intended for use in various JavaScript
 runtimes. It can be imported from a CDN via URL directly, or installed as a dependency
-from `npm` for use in Node.js or via a bundler.
+from `pnpm` for use in Node.js or via a bundler.
 
 ```javascript
 // Browser or Deno via a CDN
@@ -124,23 +124,15 @@ I welcome any input, feedback, bug reports, and contributions. This project requ
 
 ```bash
 cd reference-spec-reader
-npm install
+pnpm install
 ```
 
 ### Running tests
 
 ```bash
-npm test # runs unit tests only
-npm run test:ci # runs CI test suite (type-checking, linting, and unit tests)
+pnpm test # runs unit tests only
+pnpm run test:ci # runs CI test suite (type-checking, linting, and unit tests)
 ```
 
-> NOTE: If making a PR, please run `npm run format` to auto-format your changes. The linting
+> NOTE: If making a PR, please run `pnpm fmt` to auto-format your changes. The linting
 > check will fail for unformatted code.
-
-### Publishing to `npm`
-
-```bash
-npm version [<new version> | major | minor | patch]
-npm publish --dry-run # make sure correct files are included in tarball
-npm publish
-```
