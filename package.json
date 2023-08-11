@@ -1,41 +1,31 @@
 {
   "name": "reference-spec-reader",
   "version": "0.1.3",
-  "description": "",
-  "main": "src/index.js",
+  "author": "manzt <trevor.j.manz@gmail.com>",
+  "license": "MIT",
   "type": "module",
-  "types": "types/index.d.ts",
   "files": [
     "src",
-    "types",
-    "types.d.ts"
+    "dist"
   ],
-  "exports": "./src/index.js",
-  "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  "scripts": {
+    "test:ci": "npm run lint && tsc && npm test",
+    "test": "uvu test",
+    "prepare": "tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "fmt": "prettier --use-tabs --write src/**/* test/**/*",
+    "lint": "prettier --use-tabs --check src/**/* test/**/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js"
+    }
   },
   "devDependencies": {
     "nunjucks": "^3.2.3",
     "prettier": "^2.3.2",
-    "typescript": "^4.3.5",
+    "typescript": "^5.1.6",
     "uvu": "^0.5.1"
-  },
-  "scripts": {
-    "test:ci": "npm run lint && tsc && npm test",
-    "test": "uvu test",
-    "prepare": "tsc",
-    "format": "prettier --write src/**/*.js test/**/*.js",
-    "lint": "prettier --check src/**/*.js test/**/*.js"
-  },
-  "keywords": [],
-  "author": "manzt <trevor.j.manz@gmail.com>",
-  "license": "MIT",
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 120,
-    "arrowParens": "avoid",
-    "trailingComma": "all",
-    "useTabs": true,
-    "tabWidth": 4
   }
 }

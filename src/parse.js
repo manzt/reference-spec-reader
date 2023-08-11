@@ -1,38 +1,35 @@
-// @ts-check
-/// <reference lib="esnext" />
-
-import { render } from './render.js';
+import { render } from "./render.js";
 
 /**
- * @param {import('../types').ReferencesV0 | import('../types').ReferencesV1} spec
- * @param {import('../types').RenderFn=} renderString
+ * @param {import('./types.js').ReferencesV0 | import('./types.js').ReferencesV1} spec
+ * @param {import('./types.js').RenderFn=} renderString
  */
 export function parse(spec, renderString = render) {
 	// @ts-ignore
-	return 'version' in spec ? parseV1(spec, renderString) : parseV0(spec);
+	return "version" in spec ? parseV1(spec, renderString) : parseV0(spec);
 }
 
 /**
- * @param {import('../types').ReferencesV0} spec
- * @returns {Map<string, import('../types').Ref>}
+ * @param {import('./types.js').ReferencesV0} spec
+ * @returns {Map<string, import('./types.js').Ref>}
  */
 function parseV0(spec) {
 	return new Map(Object.entries(spec));
 }
 
 /**
- * @param {import('../types').ReferencesV1} spec
- * @param {import('../types').RenderFn} renderString
- * @returns {Map<string, import('../types').Ref>}
+ * @param {import('./types.js').ReferencesV1} spec
+ * @param {import('./types.js').RenderFn} renderString
+ * @returns {Map<string, import('./types.js').Ref>}
  */
 function parseV1(spec, renderString) {
-	/** @type {import('../types').RenderContext} */
+	/** @type {import('./types.js').RenderContext} */
 	const context = {};
 	for (const [key, template] of Object.entries(spec.templates ?? {})) {
 		// TODO: better check for whether a template or not
-		if (template.includes('{{')) {
+		if (template.includes("{{")) {
 			// Need to register filter in environment
-			context[key] = ctx => renderString(template, ctx);
+			context[key] = (ctx) => renderString(template, ctx);
 		} else {
 			context[key] = template;
 		}
@@ -43,14 +40,14 @@ function parseV1(spec, renderString) {
 		return renderString(t, { ...context, ...o });
 	};
 
-	/** @type {Map<string, import('../types').Ref>} */
+	/** @type {Map<string, import('./types.js').Ref>} */
 	const refs = new Map();
 
 	for (const [key, ref] of Object.entries(spec.refs ?? {})) {
-		if (typeof ref === 'string') {
+		if (typeof ref === "string") {
 			refs.set(key, ref);
 		} else {
-			const url = ref[0]?.includes('{{') ? render(ref[0]) : ref[0];
+			const url = ref[0]?.includes("{{") ? render(ref[0]) : ref[0];
 			refs.set(key, ref.length === 1 ? [url] : [url, ref[1], ref[2]]);
 		}
 	}
@@ -59,7 +56,7 @@ function parseV1(spec, renderString) {
 		for (const dims of iterDims(g.dimensions)) {
 			const key = render(g.key, dims);
 			const url = render(g.url, dims);
-			if ('offset' in g && 'length' in g) {
+			if ("offset" in g && "length" in g) {
 				// [url, offset, length]
 				const offset = render(g.offset, dims);
 				const length = render(g.length, dims);
@@ -75,12 +72,14 @@ function parseV1(spec, renderString) {
 }
 
 /**
- * @param {Record<string, import('../types').Range | number[]>} dimensions
+ * @param {Record<string, import('./types.js').Range | number[]>} dimensions
  * @returns {Generator<Record<string, number>>}
  */
 function* iterDims(dimensions) {
 	const keys = Object.keys(dimensions);
-	const iterables = Object.values(dimensions).map(i => (Array.isArray(i) ? i : [...range(i)]));
+	const iterables = Object.values(dimensions).map((i) =>
+		Array.isArray(i) ? i : [...range(i)]
+	);
 	for (const values of product(...iterables)) {
 		yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));
 	}
@@ -92,10 +91,10 @@ function* product(...iterables) {
 		return;
 	}
 	// make a list of iterators from the iterables
-	const iterators = iterables.map(it => it[Symbol.iterator]());
-	const results = iterators.map(it => it.next());
-	if (results.some(r => r.done)) {
-		throw new Error('Input contains an empty iterator.');
+	const iterators = iterables.map((it) => it[Symbol.iterator]());
+	const results = iterators.map((it) => it.next());
+	if (results.some((r) => r.done)) {
+		throw new Error("Input contains an empty iterator.");
 	}
 	for (let i = 0; ; ) {
 		if (results[i].done) {
@@ -114,7 +113,7 @@ function* product(...iterables) {
 	}
 }
 
-/** @param {import('../types').Range} rng */
+/** @param {import('./types.js').Range} rng */
 function* range({ stop, start = 0, step = 1 }) {
 	for (let i = start; i < stop; i += step) {
 		yield i;
