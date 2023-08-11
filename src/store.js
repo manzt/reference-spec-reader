@@ -1,20 +1,17 @@
-// @ts-check
-/// <reference lib="esnext" />
-
-import { parse } from './parse.js';
+import { parse } from "./parse.js";
 
 class KeyError extends Error {
-	__zarr__ = 'KeyError';
+	__zarr__ = "KeyError";
 	/** @param {string} msg */
 	constructor(msg) {
 		super(msg);
-		this.name = 'KeyError';
+		this.name = "KeyError";
 	}
 }
 
 export class ReferenceStore {
 	/**
-	 * @param {Map<string, import('../types').Ref>} references
+	 * @param {Map<string, import('./types.js').Ref>} references
 	 * @param {{ target?: string }=} opts
 	 */
 	constructor(references, opts = {}) {
@@ -23,31 +20,31 @@ export class ReferenceStore {
 	}
 
 	/**
-	 * @param {string | import('../types').ReferencesV0 | import('../types').ReferencesV1} data
+	 * @param {string | import('./types.js').ReferencesV0 | import('./types.js').ReferencesV1} data
 	 * @param {{
 	 *   target?: string;
-	 *   renderString?: import('../types').RenderFn;
+	 *   renderString?: import('./types.js').RenderFn;
 	 * }=} opts
 	 */
 	static fromJSON(data, opts = {}) {
-		const spec = typeof data === 'string' ? JSON.parse(data) : data;
+		const spec = typeof data === "string" ? JSON.parse(data) : data;
 		const ref = parse(spec, opts.renderString);
 		return new ReferenceStore(ref, opts);
 	}
 
 	/** @param {string} url */
 	_url(url) {
-		const [protocol, path] = url.split('://');
-		if (protocol === 'https' || protocol === 'http') {
+		const [protocol, path] = url.split("://");
+		if (protocol === "https" || protocol === "http") {
 			return url;
 		}
-		if (protocol === 'gc') {
+		if (protocol === "gc") {
 			return `https://storage.googleapis.com/${path}`;
 		}
-		if (protocol === 's3') {
+		if (protocol === "s3") {
 			return `https://s3.amazonaws.com/${path}`;
 		}
-		throw Error('Protocol not supported, got: ' + JSON.stringify(protocol));
+		throw Error("Protocol not supported, got: " + JSON.stringify(protocol));
 	}
 
 	/**
@@ -79,8 +76,8 @@ export class ReferenceStore {
 			throw new KeyError(key);
 		}
 
-		if (typeof entry === 'string') {
-			if (entry.startsWith('base64:')) {
+		if (typeof entry === "string") {
+			if (entry.startsWith("base64:")) {
 				return __toBinary(entry.slice(7)).buffer;
 			}
 			return __encoder.encode(entry).buffer;
@@ -97,7 +94,9 @@ export class ReferenceStore {
 			return res.arrayBuffer();
 		}
 
-		throw new Error(`Request unsuccessful for key ${key}. Response status: ${res.status}.`);
+		throw new Error(
+			`Request unsuccessful for key ${key}. Response status: ${res.status}.`,
+		);
 	}
 
 	/** @param {string} key */
@@ -115,7 +114,7 @@ export class ReferenceStore {
 	 * @returns {never}
 	 */
 	setItem(key, value) {
-		throw Error('FileReferenceStore.setItem is not implemented.');
+		throw Error("FileReferenceStore.setItem is not implemented.");
 	}
 
 	/**
@@ -123,7 +122,7 @@ export class ReferenceStore {
 	 * @returns {never}
 	 */
 	deleteItem(key) {
-		throw Error('FileReferenceStore.deleteItem is not implemented.');
+		throw Error("FileReferenceStore.deleteItem is not implemented.");
 	}
 }
 
@@ -138,10 +137,12 @@ const __toBinary = (() => {
 		table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i;
 	}
 	// @ts-ignore
-	return base64 => {
+	return (base64) => {
 		var n = base64.length;
-		// @ts-ignore
-		var bytes = new Uint8Array((((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3) / 4) | 0);
+		var bytes = new Uint8Array(
+			// @ts-expect-error
+			(((n - (base64[n - 1] == "=") - (base64[n - 2] == "=")) * 3) / 4) | 0,
+		);
 		for (var i = 0, j = 0; i < n; ) {
 			var c0 = table[base64.charCodeAt(i++)],
 				c1 = table[base64.charCodeAt(i++)];
