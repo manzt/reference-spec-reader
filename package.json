@@ -23,9 +23,9 @@
     }
   },
   "devDependencies": {
-    "nunjucks": "^3.2.3",
-    "prettier": "^2.3.2",
+    "nunjucks": "^3.2.4",
+    "prettier": "^3.0.1",
     "typescript": "^5.1.6",
-    "uvu": "^0.5.1"
+    "uvu": "^0.5.6"
   }
 }

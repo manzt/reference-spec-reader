@@ -95,7 +95,7 @@ export class ReferenceStore {
 		}
 
 		throw new Error(
-			`Request unsuccessful for key ${key}. Response status: ${res.status}.`
+			`Request unsuccessful for key ${key}. Response status: ${res.status}.`,
 		);
 	}
 
@@ -141,7 +141,7 @@ const __toBinary = (() => {
 		var n = base64.length;
 		var bytes = new Uint8Array(
 			// @ts-expect-error
-			(((n - (base64[n - 1] == "=") - (base64[n - 2] == "=")) * 3) / 4) | 0
+			(((n - (base64[n - 1] == "=") - (base64[n - 2] == "=")) * 3) / 4) | 0,
 		);
 		for (var i = 0, j = 0; i < n; ) {
 			var c0 = table[base64.charCodeAt(i++)],

@@ -78,7 +78,7 @@ function parseV1(spec, renderString) {
 function* iterDims(dimensions) {
 	const keys = Object.keys(dimensions);
 	const iterables = Object.values(dimensions).map((i) =>
-		Array.isArray(i) ? i : [...range(i)]
+		Array.isArray(i) ? i : [...range(i)],
 	);
 	for (const values of product(...iterables)) {
 		yield Object.fromEntries(keys.map((key, i) => [key, values[i]]));

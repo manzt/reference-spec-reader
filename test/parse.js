@@ -53,7 +53,7 @@ const expected = new Map(
 		gen_key4: ["http://server.domain/path_4", 5000, 1000],
 		gen_key5: ["http://server.domain/path_5"],
 		gen_key6: ["http://server.domain/path_6"],
-	})
+	}),
 );
 
 test("Parse references builtin", async () => {

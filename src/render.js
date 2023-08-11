@@ -35,13 +35,13 @@ function matchFn(str) {
 		args.split(",").map((kwarg) => {
 			const { key, num, str } =
 				kwarg.match(
-					/(?<key>[a-z_0-9]*)\s*=\s*((?<num>[0-9.]+)|('|")(?<str>.*)('|"))/i
+					/(?<key>[a-z_0-9]*)\s*=\s*((?<num>[0-9.]+)|('|")(?<str>.*)('|"))/i,
 				)?.groups ?? {};
 			if (!key || !(num || str)) {
 				throw Error(`Failed to match fn kwarg: ${kwarg}`);
 			}
 			return [key, num ? Number(num) : str];
-		})
+		}),
 	);
 
 	return { fname, ctx };
@@ -52,7 +52,7 @@ const numbers = "01234569789";
 const expr = "()*/+-";
 const space = " ";
 const valid = new Set(
-	alphabet + alphabet.toUpperCase() + numbers + expr + space
+	alphabet + alphabet.toUpperCase() + numbers + expr + space,
 );
 /** @param {string} str */
 function matchMathEval(str) {
@@ -84,7 +84,7 @@ export function render(template, context) {
 					return fn(ctx);
 				}
 				throw Error(
-					`Cannot find function named ${fname} in rendering context.`
+					`Cannot find function named ${fname} in rendering context.`,
 				);
 			}
 
@@ -95,12 +95,12 @@ export function render(template, context) {
 					const value = context[match.str];
 					if (value == null) {
 						throw Error(
-							`Cannot find number named ${match.str} in rendering context.`
+							`Cannot find number named ${match.str} in rendering context.`,
 						);
 					}
 					if (typeof value !== "number") {
 						throw Error(
-							`The provided value for ${match.str} must be a number.`
+							`The provided value for ${match.str} must be a number.`,
 						);
 					}
 					return value;
