@@ -1,5 +1,5 @@
 ---
-"reference-spec-reader": patch
+"reference-spec-reader": minor
 ---
 
 feat: ESM only package
